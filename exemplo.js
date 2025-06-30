@@ -99,21 +99,28 @@ function run(body) {
 
    function feriadoFuncionamento(datas) {
     const arrayDeDatas = JSON.parse(datas);
-    const dataAtual = new Date().toISOString().split('T')[0];
-    const diaDaSemana = agora.getUTCDay();//retorna o dia 
-    const horaAtual = agora.getUTCHours();//retorna as horas
-    const minutoAtual = agora.getUTCMinutes();//retorna os minutos
-
-    const estaDentroHorarioFuncionamento = 
-    (diaDaSemana >= 1 && diaDaSemana <= 5 && horaAtual >= 6 && (horaAtual < 18 || (horaAtual === 18 && minutoAtual < 0)))
-    || (diaDaSemana === 6 && horaAtual >= 7 && (horaAtual < 11 || (horaAtual === 11 && minutoAtual < 0)));
+    const agora = new Date(); // data/hora atual local
+    const dataAtual = agora.toISOString().split('T')[0]; // "YYYY-MM-DD"
     
-    if (arrayDeDatas && arrayDeDatas.includes(dataAtual) && estaDentroHorarioFuncionamento ?) {
+    const diaDaSemana = agora.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
+    const horaAtual = agora.getHours();
+    const minutoAtual = agora.getMinutes();
+    
+    // Horário de funcionamento:
+    // Segunda a Sexta: 06:00 às 18:00
+    // Sábado: 07:00 às 11:00
+    const estaDentroHorarioFuncionamento = (
+      (diaDaSemana >= 1 && diaDaSemana <= 5 && (horaAtual >= 6 && horaAtual < 18)) ||
+      (diaDaSemana === 6 && (horaAtual >= 7 && horaAtual < 11))
+    );
+    
+    if (arrayDeDatas.includes(dataAtual) && estaDentroHorarioFuncionamento) {
       return "SIM";
     } else {
       return "NAO";
     }
   }
+  
 
 
 
