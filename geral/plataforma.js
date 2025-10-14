@@ -22,4 +22,4 @@ function processarLog(body) {
     }
   }
   // Processa o log e exibe o objeto com os dados extraídos
-  var resultado = processarLog(body);
+  var resultado = processarLog(body); 
