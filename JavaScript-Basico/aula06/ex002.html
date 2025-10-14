@@ -1,28 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meu primeiro programa...</title>
     <style>
-        body {
-            background-color: rgb(112, 103, 189);
-            color: white; /*Isso é uma comentario em CSS*/
-            font: normal 25pt Arial;
-        }
-        h1 {
-            color: rgb(212, 212, 43);
-        }
+      body {
+        background-color: rgb(112, 103, 189);
+        color: white; /*Isso é uma comentario em CSS*/
+        font: normal 25pt Arial;
+      }
+      h1 {
+        color: rgb(212, 212, 43);
+      }
     </style>
-</head>
-<body>
-    <h1>Hello, World!</h1> <!--Isso é um comentario em HTML-->
+  </head>
+  <body>
+    <h1>Hello, World!</h1>
+    <!--Isso é um comentario em HTML-->
     <p>O inicio de uma jornada</p>
     <script>
-      var n1 = Number(window.prompt("Digite um número: "))
-      var n2 = Number(window.prompt("Digite outro número: "))
-      var s = n1 + n2
-      window.alert("A soma dos valores é " + String(s))
+      function soma(num1, num2) {
+        num1 = Number(num1);
+        num2 = Number(num2);
+
+        if (Number.isNaN(num1) || Number.isNaN(num2)) {
+          console.log("passei aqui ");
+
+          return null;
+        }
+        return Number(num1) + Number(num2);
+      }
+
+      let n1 = window.prompt("Digite um número: ");
+      let n2 = window.prompt("Digite outro número: ");
+
+      const resultado = soma(n1, n2);
+      //   window.alert(`A soma entre ${n1} e ${n2} é igual a ${s}`) // para funcionar utilize crase em vez de aspas simples ou duplas
+
+      console.log(`resultado ${resultado}`);
+
+      if (Number.isNaN(resultado)) {
+        window.alert("Não reconheci como número segundo");
+      } else {
+        window.alert("A soma dos valores é " + resultado);
+      }
     </script>
-</body>
-</html> 
+  </body>
+</html>
