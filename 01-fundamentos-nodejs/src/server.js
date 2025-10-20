@@ -1,5 +1,8 @@
 import http from 'node:http'
-import { json } from 'node:stream/consumers'
+import { randomUUID } from 'node:crypto'
+import {json} from './middlewares/json.js'
+import { Database } from './middlewares/database.js'
+// import { json } from 'node:stream/consumers'
 
 
 // Criar um usuário (name, email, senha)
@@ -29,43 +32,43 @@ Cabeçalhos (Requisição/resposta) => Metadados
 
 HTTP status COD - writeHead retorna codigo de status do http
 
+await => aguarda uma função ser executada pra prosseguir no codigo
+
 */
 
-const users = []
+// const users = []
+
+const database = new Database()
 
 const server = http.createServer(async(req, res) => {
     const { method, url} = req
 
-    const buffers =  []
-
-    for await (const chunk of req) {
-        buffers.push(chunk)
-    }
-
-    try {
-        req.body = JSON.parse(Buffer.concat(buffers).toString())
-    } catch {
-        req.body = null
-    }
+    // aguardando a função ser realizada para proseeguir
+    await json(req, res)
     
 
 
     if (method == 'GET' && url == '/users') {
+        const users = database.select('users')
         // return res.end('Listagem de usuários')
         // return res.end(JSON.stringify(users))
         // return res.setHeader('Content-type', 'application/json').end(JSON.stringify(users)) // tratar os dados como JSON
         return res
-        .setHeader('Content-type', 'application/json')
+        // .setHeader('Content-type', 'application/json') => transformando os dados do backend em json
         .end(JSON.stringify(users))
     }
 
     if (method == 'POST' && url == '/users'){
         const {name, email} = req.body
-        users.push({
-            id: 1,
+        
+        const user = {
+            id: randomUUID(),
             name,
             email
-        })
+        }
+
+        database.insert('users', user)
+        
         // return res.end('Criação de usuário')
         return res.writeHead(201).end() // writeHead retorna codigo de status do http
     } 
