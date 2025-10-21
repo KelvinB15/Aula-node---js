@@ -20,15 +20,15 @@ export class Database{
         fs.writeFile(databasePath, JSON.stringify(this.#database))
     }
 
- select (table, search) {
+ select (table, filters) {
     let data = this.#database[table] ?? []
 
-    if (search) {
+    if (filters) {
         data = data.filter(row => {
             // console.log('data: ' + data + ' row: ' + row + ' search: ' + search)
-            return Object.entries(search).some(([key, value]) => {
+            return Object.entries(filters).some(([key, value]) => {
                 // console.log('key: '+ key + ' value: ' + value)
-                return row[key].toLowerCase().includes(value.toLowerCase())
+                return row[key]?.toLowerCase().includes(value.toLowerCase())
             })
         })
     }
@@ -55,7 +55,7 @@ export class Database{
     }
  }
  delete (table, id) {
-    const rowIndex = this.#database[table].findIndex(row = row.id === id)
+    const rowIndex = this.#database[table].findIndex(row => row.id === id)
 
     if (rowIndex > -1){
         this.#database[table].splice(rowIndex, 1)

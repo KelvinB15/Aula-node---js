@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Estudar Node.js",
+    "task": "Completar o curso da Rocketseat",
+    "description": "Módulo fundamentos",
+    "completed": false
+  },
+  {
+    "title": "Ler documentação do Express",
+    "task": "Ler sobre middleware",
+    "description": "https://expressjs.com",
+    "completed": false
+  }
+]
