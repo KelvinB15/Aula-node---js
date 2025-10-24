@@ -5,4 +5,5 @@ dist/
 *.log
 tsconfig
 tmp/app.db
-db
+db/app.db
+.env.test
