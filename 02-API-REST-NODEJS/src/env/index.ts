@@ -26,12 +26,15 @@ export const env = _env.data
 */
 
 if (_env.success === false) {
-  const formatted = z.treeifyError(_env.error)
+  console.error('⚠️ Invalid environment variables', _env.error.format())
 
-  console.error('Erro no env, verifique se está sem conteudo')
-  console.dir(formatted, { depth: null })
+  throw new Error('Invalid environment variables.')
+  // const formatted = z.treeifyError(_env.error)
 
-  throw new Error('Erro no env, verifique se está sem conteudo')
+  // console.error('Erro no env, verifique se está sem conteudo')
+  // console.dir(formatted, { depth: null })
+
+  // throw new Error('Erro no env, verifique se está sem conteudo')
 }
 export const env = _env.data
 
