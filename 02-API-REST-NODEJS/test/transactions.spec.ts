@@ -1,8 +1,11 @@
-import { it, beforeAll, afterAll, describe, expect, beforeEach } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+
+import { execSync } from 'node:child_process'
+
 import request from 'supertest'
 import { app } from '../src/app.js'
-import { execSync } from 'child_process'
-// import { it } from 'node:test'
+
+// import { app } from '../src/app'
 
 describe('Transactions routes', () => {
   beforeAll(async () => {
@@ -15,70 +18,134 @@ describe('Transactions routes', () => {
 
   beforeEach(() => {
     execSync('npm run knex migrate:rollback --all')
+
     execSync('npm run knex migrate:latest')
   })
 
-  it('o usuário consegue criar uma nova transação', async () => {
-    // fazer a chamada HTTP p/ criar uma nova transação
-
+  it('should be able to create a new transaction', async () => {
     await request(app.server)
       .post('/transactions')
+
       .send({
         title: 'New transaction',
+
         amount: 5000,
+
         type: 'credit',
       })
+
       .expect(201)
-
-    //   const responseStatusCode = 201
-
-    //   expect(responseStatusCode).toEqual(201)
   })
 
   it('should be able to list all transactions', async () => {
-    const createTransactionsResponse = await request(app.server)
+    const createTransactionResponse = await request(app.server)
       .post('/transactions')
+
       .send({
         title: 'New transaction',
+
         amount: 5000,
+
         type: 'credit',
       })
 
-    const cookies = createTransactionsResponse.get('Set-Cookie')
+    const cookies = createTransactionResponse.get('Set-Cookie')
 
-    // valida se há
-    if (!cookies) {
-      throw new Error('Nenhum cookie retornado pela requisição')
-    }
+    if (!cookies) throw new Error('No cookies set in response')
 
     const listTransactionsResponse = await request(app.server)
       .get('/transactions')
-      .set('Cookie', cookies) // caso o cookie vier undefined, não rodara essa linha, por isso o if(!cookies)
+      .set('Cookie', cookies)
       .expect(200)
 
-    // console.log(listTransactionsResponse.body)
-
-    const transactionId = listTransactionsResponse.body.transaction[0].id
-    const listTransactionsResponse = await request(app.server)
-      .get(`/transactions/${transactionId}`)
-      .set(`Cookie`, cookies)
-      .expect(200)
-
-    /*
-    Confira a maneira que o body do listTransactionsResponse está sendo recebido
-    Pois ele vem como 
-    Object [
-        transactions: array [
-            object {}
-        ]
-    ]
-    Em vista disso, informe o corpo e qual objeto quer trazer o array
-    */
     expect(listTransactionsResponse.body.transactions).toEqual([
       expect.objectContaining({
         title: 'New transaction',
+
         amount: 5000,
       }),
     ])
+  })
+
+  it('should be able to get a specific transaction', async () => {
+    const createTransactionResponse = await request(app.server)
+      .post('/transactions')
+
+      .send({
+        title: 'New transaction',
+
+        amount: 5000,
+
+        type: 'credit',
+      })
+
+    const cookies = createTransactionResponse.get('Set-Cookie')
+
+    if (!cookies) throw new Error('No cookies set in response')
+
+    const listTransactionsResponse = await request(app.server)
+      .get('/transactions')
+
+      .set('Cookie', cookies)
+
+      .expect(200)
+
+    const transactionId = listTransactionsResponse.body.transactions[0].id
+
+    const getTransactionResponse = await request(app.server)
+      .get(`/transactions/${transactionId}`)
+
+      .set('Cookie', cookies)
+
+      .expect(200)
+
+    expect(getTransactionResponse.body.transactions).toEqual(
+      expect.objectContaining({
+        title: 'New transaction',
+
+        amount: 5000,
+      }),
+    )
+  })
+
+  it('should be able to get the summary', async () => {
+    const createTransactionResponse = await request(app.server)
+      .post('/transactions')
+
+      .send({
+        title: 'Credit transaction',
+
+        amount: 5000,
+
+        type: 'credit',
+      })
+
+    const cookies = createTransactionResponse.get('Set-Cookie')
+
+    if (!cookies) throw new Error('No cookies set in response')
+
+    await request(app.server)
+      .post('/transactions')
+
+      .set('Cookie', cookies)
+
+      .send({
+        title: 'Debit transaction',
+
+        amount: 2000,
+
+        type: 'debit',
+      })
+
+    const summaryResponse = await request(app.server)
+      .get('/transactions/summary')
+
+      .set('Cookie', cookies)
+
+      .expect(200)
+
+    expect(summaryResponse.body.summary).toEqual({
+      amount: 3000,
+    })
   })
 })

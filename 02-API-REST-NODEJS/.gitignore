@@ -1,9 +1,17 @@
 # Node.js
+#Dependencias
 node_modules/
+
+#Database
+db/*.db
+tmp/app.db
+
+#Environment
 .env
 dist/
 *.log
 tsconfig
-tmp/app.db
-db/app.db
 .env.test
+
+#Build
+build
