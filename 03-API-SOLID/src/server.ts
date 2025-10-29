@@ -1,5 +1,8 @@
-import { env } from '../env/index.js'
-import app from './app.js'
+import { env } from './env/index.js'
+import { app } from './app.js'
+import { appRoutes } from './http/routes.js'
+
+await appRoutes
 
 app
   .listen({

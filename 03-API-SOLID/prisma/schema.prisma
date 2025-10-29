@@ -15,15 +15,18 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
+  id            String   @id @default(uuid())
   name          String
-  email         String    @unique
+  email         String   @unique
   password_hash String
-  created_at    DateTime  @default(now())
-  Checkin       CheckIn[]
+  created_at    DateTime @default(now())
+
+  Checkin CheckIn[]
 
   @@map("users")
 }
+
+
 
 model CheckIn {
   id           String   @id @default(uuid())
