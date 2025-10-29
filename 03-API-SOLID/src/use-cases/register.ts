@@ -3,6 +3,7 @@
 import type { usersRepository } from '@/repositories/users-repository.js'
 import { hash } from 'bcryptjs'
 import { UsersAlreadyExistsError } from './errors/user-already-exists.js'
+import type { User } from '@prisma/client'
 
 interface registerUseCaseRequest {
   name: string
@@ -10,14 +11,21 @@ interface registerUseCaseRequest {
   password: string
 }
 
-export class RegisterUseCase {
-    constructor(private usersRepository: usersRepository){}
+interface RegisterUseCaseResponse {
+  user: User
+}
 
-  async execute({ name, email, password }: registerUseCaseRequest) {
+export class RegisterUseCase {
+  constructor(private usersRepository: usersRepository) {}
+
+  async execute({
+    name,
+    email,
+    password,
+  }: registerUseCaseRequest): Promise<RegisterUseCaseResponse> {
     const password_hash = await hash(password, 6)
 
     const userWithSameEmail = await this.usersRepository.findByEmail(email)
-
 
     /* antes de cotinuar (await) verifica se existe no banco com 'prisma' na tabela 'user'
 se tem dados unicos (findUnique) 
@@ -35,11 +43,15 @@ se tem dados unicos (findUnique)
 
     // const prismaUsersRepository = new PrismaUsersRepository()
 
-   await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       email,
       password_hash,
     })
+
+    return {
+      user,
+    }
     /*
   await prisma.user.create({
     data: {
