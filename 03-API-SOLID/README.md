@@ -1,8 +1,10 @@
-# App
+# Anotações de estudo
+
+## App
 
 GymPass style app.
 
-## RFs (Requisitos funcionais)
+### RFs (Requisitos funcionais)
 
 - [x] Dever ser possível se cadastrar;
 - [x] Dever ser possível se autenticar;
@@ -15,7 +17,7 @@ GymPass style app.
 - [] Dever ser possível validar o check-in de um usuário;
 - [] Dever ser possível cadastrar uma academia;
 
-## RNs (Regras de negócio)
+### RNs (Regras de negócio)
 
 - [x] O usuário não deve poder se cadastrar com u e-mail duplicado;
 - [] O usuário não pode fazer 2 check-ins no mesmo dia;
@@ -24,7 +26,7 @@ GymPass style app.
 - [] O check-in só pode ser validado por administradores;
 - [] A academia só pode ser cadastrada por administradores;
 
-## RNFs (Requisitos não-funcionais)
+### RNFs (Requisitos não-funcionais)
 
 - [x] A senha do usuário precisa estar criptograda;
 - [x] Os dados da aplicação precisam estar persistidos em um banco PostgreSQL;
@@ -33,9 +35,9 @@ GymPass style app.
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
+### async e await e Promise
 
 
-async e await e Promise
 
 | Palavra   | Significado Infantil                                            | Exemplo                                 |
 | --------- | --------------------------------------------------------------- | --------------------------------------- |
@@ -71,6 +73,7 @@ console.log('🧸 Brincando enquanto o biscoito assa...')
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+### Sintaxe e logica Javascript 
 
 | Palavra | Pode mudar? | Onde vale?                 | Como é?              |
 | ------- | ----------- | -------------------------- | -------------------- |
