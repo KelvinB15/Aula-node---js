@@ -3,6 +3,14 @@ import type { usersRepository } from '../users-repository.js'
 
 export class InMemoryUsersRepository implements usersRepository {
   public items: User[] = []
+  async findById(id: string) {
+    const user = this.items.find((item) => item.id === id)
+
+    if (!user) {
+      return null
+    }
+    return null
+  }
 
   async findByEmail(email: string) {
     // throw new Error('Metodo não implementado')

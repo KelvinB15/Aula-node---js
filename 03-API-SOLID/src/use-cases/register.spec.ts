@@ -2,7 +2,7 @@ import { expect, describe, it, beforeEach } from 'vitest'
 import { RegisterUseCase } from './register.js'
 // import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository.js'
 // import { compare } from 'bcryptjs'
-import { InMemoryUsersRepository } from '@/repositories/in-memory-users-repository.ts/in-memory-users-repository.js'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository.js'
 import { UsersAlreadyExistsError } from './errors/user-already-exists.js'
 
 let usersRepository: InMemoryUsersRepository

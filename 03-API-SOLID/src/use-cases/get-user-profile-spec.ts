@@ -4,38 +4,37 @@ import { expect, describe, it, beforeEach } from 'vitest'
 // import { compare } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository.js'
 import { hash } from 'bcryptjs'
-import { AuthenticateUseCase } from './authenticate.js'
-import { InvalidCredentialError } from './errors/invalid-credential-error.js'
+// import { AuthenticateUseCase } from './authenticate.js'
+// import { InvalidCredentialError } from './errors/invalid-credential-error.js'
+import { GetUserProfileUseCase } from './get-user-profile.js'
+import { ResourceNotFoundError } from './errors/resource-not-found-error.js'
 // import { beforeEach } from 'node:test'
 // import { UsersAlreadyExistsError } from './errors/user-already-exists.js'
 
 let usersRepository: InMemoryUsersRepository
-let sut: AuthenticateUseCase
+let sut: GetUserProfileUseCase
 
-describe('autenticação use case', () => {
+describe('Obter perfil do usuário use case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository()
-    sut = new AuthenticateUseCase(usersRepository)
+    sut = new GetUserProfileUseCase(usersRepository)
   })
 
-  it('Deve ser possível autenticar', async () => {
-    await usersRepository.create({
+  it('Deve ser possível obter o usuário', async () => {
+    const createdUser = await usersRepository.create({
       name: 'Jhon Doe',
       email: 'jhondoe@example.com',
       password_hash: await hash('123456', 6),
     })
 
     const { user } = await sut.execute({
-      email: 'jhondoe@example.com',
-      password: '123456',
+      userId: createdUser.id,
     })
     expect(user.id).toEqual(expect.any(String))
+    expect(user.name).toEqual('Jhon Doe')
   })
 
-  it('Não deve ser possível autenticar com um email incorreta.', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const sut = new AuthenticateUseCase(usersRepository)
-
+  it('Não deve ser possível obter o usuário', async () => {
     // await usersRepository.create({
     //   name: 'Jhon Doe',
     //   email: 'jhondoe@example.com',
@@ -44,10 +43,9 @@ describe('autenticação use case', () => {
 
     await expect(() =>
       sut.execute({
-        email: 'jhondoe@example.com',
-        password: '123456',
+        userId: 'Eu sou um usuário que não existe por não ter id',
       }),
-    ).rejects.toBeInstanceOf(InvalidCredentialError)
+    ).rejects.toBeInstanceOf(ResourceNotFoundError)
   })
   /*
     const { user } = await sut.execute({
@@ -57,19 +55,4 @@ describe('autenticação use case', () => {
     expect(user.id).toEqual(expect.any(String))
   })
     */
-
-  it('Não deve ser possível autenticar com uma senha incorreta.', async () => {
-    await usersRepository.create({
-      name: 'Jhon Doe',
-      email: 'jhondoe@example.com',
-      password_hash: await hash('123456', 6),
-    })
-
-    await expect(() =>
-      sut.execute({
-        email: 'jhondoe@example.com',
-        password: '123123',
-      }),
-    ).rejects.toBeInstanceOf(InvalidCredentialError)
-  })
 })
